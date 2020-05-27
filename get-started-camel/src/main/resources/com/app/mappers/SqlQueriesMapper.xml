@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.app.mappers.SqlQueriesMapper">
+
+	<select id="selectUsers" resultMap="selectUsersMap">
+		select ID,USERNAME,PASSWORD from app_user
+	</select>
+
+	<resultMap type="com.app.dto.Users"    id="selectUsersMap">
+		<id property="id" column="ID" />
+		<result property="username" column="USERNAME" />
+		<result property="password" column="PASSWORD" />
+	</resultMap>
+
+
+ <insert id="insertUsers" statementType="PREPARED"  parameterType="com.app.dto.Users">
+
+	INSERT INTO APP_USER (ID, USERNAME, PASSWORD) VALUES ( #{id}, #{username}, #{password})
+
+</insert> 
+
+
+</mapper>
