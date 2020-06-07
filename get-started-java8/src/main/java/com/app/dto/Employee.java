@@ -11,6 +11,9 @@ public class Employee {
 	private Date dateOfBirth;
 
 	private Long id;
+	
+	private String gender;
+	
 
 	public String getFirstname() {
 		return firstname;
@@ -44,4 +47,27 @@ public class Employee {
 		this.id = id;
 	}
 
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+	public Employee(String firstname, Date dateOfBirth, String gender) {
+		super();
+		this.firstname = firstname;
+		this.dateOfBirth = dateOfBirth;
+		this.gender = gender;
+	}
+
+	@Override
+	public String toString() {
+		return "Employee [firstname=" + firstname + ", dateOfBirth=" + dateOfBirth + ", gender=" + gender + "]";
+	}
+
+	
+
+	
 }

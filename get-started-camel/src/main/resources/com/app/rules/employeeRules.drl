@@ -1,0 +1,37 @@
+package com.app.rules;
+
+import  com.app.dto.Employee;
+import com.app.dto.MasterData;
+import com.app.dto.Employee;
+import java.util.Objects;
+
+rule "Common rule -1 : Active account rule"
+salience 3
+enabled true
+activation-group "activeAccountActivationGroup"
+	when
+		$employee : Employee ( Objects.isNull(activationDate)) 
+	then
+		$employee.setIsActive("N");
+end
+
+rule "Common rule -2 :  Department rule"
+
+activation-group "activeAccountActivationGroup"
+	when
+		$employee : Employee ("PERMANENT".equalsIgnoreCase(jobType))
+	then
+		$employee.setDeptId("P-100");
+end
+
+rule "Rule -3 : Salary rule"
+	when
+		$employee : Employee ()
+	then
+		float grossSalary =calculateSalary($employee . getPerDaySalary(),$employee .getWorkingDays());
+		$employee.setGrossSalary(grossSalary);
+end
+
+function Float calculateSalary(Float perDaySalary,Float numberOfWorkingDays){
+	return (perDaySalary * numberOfWorkingDays);
+}

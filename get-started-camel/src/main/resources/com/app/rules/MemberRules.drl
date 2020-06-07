@@ -1,0 +1,66 @@
+package com.app.rules;
+
+
+import com.app.dto.MemberDetail;
+
+import java.util.Objects;
+import org.springframework.util.StringUtils;
+
+dialect "java" 
+
+
+rule "Rule 0 : Common agenda rule"
+	when
+			member : MemberDetail( );
+	then
+		drools.setFocus("memberDemographicAgendaGroup");
+end
+ 
+ 
+rule "Rule 1 : Member Firstname and Lastname rule"
+salience 10
+//activation-group "memberDemographicRulesActivationGroup"
+agenda-group "memberDemographicAgendaGroup"
+	when
+		member : MemberDetail( StringUtils.isEmpty(firstName) || StringUtils.isEmpty(lastName));
+	then
+		member.setQualified(false);
+		member.setDisQualifiedReason(drools.getRule().getName()) ;
+		member.getExecutedRules().add(drools.getRule().getName());
+end
+
+rule "Rule 2 : Member email rule"
+salience 9
+//activation-group "memberDemographicRulesActivationGroup"
+agenda-group "memberDemographicAgendaGroup"
+	when
+		member : MemberDetail( StringUtils.isEmpty(email));
+	then
+		member.setQualified(false);
+		member.setDisQualifiedReason(drools.getRule().getName()) ;
+		member.getExecutedRules().add(drools.getRule().getName());
+end
+
+rule "Rule 3 : Member children rule to disqualify if more then 2"
+salience 8
+//activation-group "memberDemographicRulesGroup"
+//auto-focus true
+//agenda-group "familyRuleAgendaGroup"
+	when
+		member : MemberDetail (numberOfChilds > 2)
+	then
+		member.setQualified(false);
+		member.setDisQualifiedReason(drools.getRule().getName()) ;
+		member.getExecutedRules().add(drools.getRule().getName());
+end
+
+rule "Rule 4 : Member department rule"
+//activation-group "memberDepartmentActivationGroup"
+//agenda-group "memberDepartmentAgendaGroup"
+	when
+		member : MemberDetail("SALES".equalsIgnoreCase(deptCode) && stateCode not in ( "TS","MP" )  && countryCode matches "(?i)(IND|USA|AUS)*" );
+	then
+		member.setQualified(false);
+		member.setDisQualifiedReason(drools.getRule().getName()) ;
+		member.getExecutedRules().add(drools.getRule().getName());
+end
